@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { VERSI, NAMA_RILIS, TANGGAL_RILIS } from "@/lib/version";
-import { SERVICES } from "@/data/services";
+import { SERVICES, KATALOG_COUNT, ALL_COUNT } from "@/data/services";
 import { UMEA_LEVELS, UMEA_FUNCTIONS, UMEA_DOC_TIERS } from "@/data/umea";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +20,8 @@ export async function GET() {
       uptimeSince: new Date().toISOString(),
       modules: {
         services: SERVICES.length,
+        catalogServices: KATALOG_COUNT,
+        servicesTotal: ALL_COUNT,
         umeaLevels: UMEA_LEVELS.length,
         umeaFunctions: UMEA_FUNCTIONS.length,
         umeaDocTiers: UMEA_DOC_TIERS.length,

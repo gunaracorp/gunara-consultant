@@ -3,19 +3,22 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/footer";
 import { CtaBanner } from "@/components/sections/cta-banner";
 import { ServicesCatalog } from "@/components/sections/services-catalog";
+import { KatalogLengkap } from "@/components/sections/katalog-lengkap";
 import { PageHero } from "@/components/page-hero";
 import { pageMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import { BRAND } from "@/lib/brand";
-import { SERVICES } from "@/data/services";
+import { SERVICES, ALL_COUNT } from "@/data/services";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Layanan Perizinan Usaha — 46 Jenis Legalitas Satu Pintu",
+  title: "Layanan Perizinan Usaha — 546 Jenis Legalitas Satu Pintu",
   description:
-    "Katalog lengkap 46 layanan perizinan & legalitas usaha: NIB OSS RBA, pendirian PT/CV/PMA, izin BPOM, sertifikasi halal, SNI, AMDAL, PBG, KITAS. Estimasi biaya & waktu transparan, ISO 9001:2015.",
+    "Katalog terpadu 546 layanan perizinan & legalitas usaha: 46 panduan lengkap + 500 layanan katalog dengan harga transparan. NIB OSS RBA, PT/CV/PMA, BPOM, halal, SNI, AMDAL, PBG, KITAS. ISO 9001:2015.",
   keywords: [
     "jasa perizinan usaha",
     "katalog layanan perizinan",
-    "46 layanan perizinan",
+    "546 layanan perizinan",
+    "500 layanan perizinan",
+    "biaya perizinan usaha",
     "jasa legalitas perusahaan",
     "NIB OSS RBA",
     "pendirian PT",
@@ -33,16 +36,16 @@ const collectionJsonLd = {
   "@type": "CollectionPage",
   "@id": `${BRAND.siteUrl}/layanan#webpage`,
   url: `${BRAND.siteUrl}/layanan`,
-  name: "Katalog 46 Layanan Perizinan & Legalitas Usaha",
+  name: "Katalog 546 Layanan Perizinan & Legalitas Usaha",
   description:
-    "Daftar lengkap layanan perizinan dan legalitas usaha GConsultant untuk seluruh Indonesia.",
+    "Daftar lengkap layanan perizinan dan legalitas usaha GConsultant: 46 panduan penuh + 500 layanan katalog PusatPerizinan untuk seluruh Indonesia.",
   inLanguage: "id-ID",
   isPartOf: { "@id": `${BRAND.siteUrl}/#website` },
   about: { "@id": `${BRAND.siteUrl}/#organization` },
   publisher: { "@id": `${BRAND.siteUrl}/#organization` },
   mainEntity: {
     "@type": "ItemList",
-    numberOfItems: SERVICES.length,
+    numberOfItems: ALL_COUNT,
     itemListElement: SERVICES.map((s, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -64,6 +67,7 @@ export default function LayananPage() {
           subKey="pgLayananSub"
         />
         <ServicesCatalog />
+        <KatalogLengkap />
         <CtaBanner />
         <script
           type="application/ld+json"

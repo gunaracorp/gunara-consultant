@@ -52,3 +52,23 @@ Work Log:
 Stage Summary:
 - Server GConsultant v3.1.1 HIDUP dan preview eksternal terverifikasi 200 + header anti-blokir iframe aktif — pengguna cukup REFRESH preview, tanpa restart.
 - Pengetahuan infrastruktur terkunci untuk agen berikutnya: selalu luncurkan proses jangka-panjang dengan pola subshell-orphan `( nohup CMD >>log 2>&1 </dev/null & )`, JANGAN sebagai anak langsung shell tool call.
+
+---
+Task ID: 26 (katalog-integrasi-v3.2.0)
+Agent: Z.ai — Omnibrand Color Architect Council (46 perspektif)
+Task: Integrasi seluruh layanan gunaracorp/pusatperizinan (layanan-500.json, 500 layanan berharga) ke GConsultant.
+
+Work Log:
+- KLONING & ANALISIS: repo pusatperizinan diklon ke /tmp — katalog 500 layanan (4 kategori BU/KP/LH/SK, 38 sub, harga+diskon+deskripsi asli). GConsultant saat ini: 46 layanan unggulan. Overlap slug persis: 0 → integrasi mulus tanpa migrasi.
+- ARSITEKTUR DEWAN (konsensus): dua-tier — 46 unggulan (panduan penuh bilingual) + 500 katalog (harga transparan). Deskripsi asli dipertahankan; konten lingkup/proses/dokumen/FAQ ditulis per sub-kategori (sah untuk anggota sub, bukan karangan per-item).
+- DATA: scripts/build-katalog.py membangkitkan src/data/katalog.ts (213KB, server-side: 500 item + helper) & katalog-lite.ts (97KB, indeks klien TANPA deskripsi untuk search). Validasi: slug unik, harga konsisten (hemat = harga-diskon), deskripsi ≥40 char — 0 error.
+- META: katalog-meta.ts (82KB) — KAT4 + 38 sub bilingual (nameId/nameEn, lingkup, proses, dokumen, FAQ×2) + getCatalogSub/getCatalogKat.
+- KOMPONEN: catalog-detail.tsx (hero deep-green + kartu harga: hargaDiskon emas, badge -X%, harga normal tercoret, hemat hijau, CTA WA terisi kode+harga; lingkup/proses/dokumen/FAQ dari sub; related se-sub). katalog-lengkap.tsx di hub /layanan: search instan 546, tab 4 kategori + chip sub (nama), paginasi 24.
+- ROUTING: [slug]/page.tsx resolver union resolveAnySlug — featured→ServiceDetail, catalog→CatalogDetail; generateStaticParams tetap 46 (500 on-demand, build cepat); metadata + JSON-LD (Service/Offer/Breadcrumb/FAQ/HowTo) per tier. sitemap +500 URL → 566.
+- I18N: +18 key × 2 bahasa (kat*); pgLayananTitle "46"→"546" × 2; metadata hub + CollectionPage numberOfItems=ALL_COUNT; /api/status +catalogServices/servicesTotal.
+- BUGFIX di jalur: catalogBySub lupa diekspor dari services.ts (500); SectionHeading path salah (500) — keduanya diperbaiki, lint 0 error.
+- VERIFIKASI E2E: validateAllSlugs 0 error; 62 halaman acak + sampel 4 kategori semua 200; sitemap 566; agent-browser: kartu harga/diskon/hemat benar (Rp 3.380.000, -25%, hemat Rp 1.120.000), search "halal" → 15 hasil, switch EN mengubah label sub/kategori, mobile 375px tanpa overflow, dev.log bersih.
+
+Stage Summary:
+- Rilis v3.2.0 "Full Catalog Integration": GConsultant kini 546 layanan (klaim "500+" hero menjadi fakta), harga PusatPerizinan transparan di seluruh halaman katalog, sitemap 566 URL, taksonomi bilingual 4/38.
+- Server tetap hidup (pola orphan 25-b); file sementara /tmp/pusatperizinan disimpan untuk referensi (hapus aman).

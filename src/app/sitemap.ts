@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { BRAND } from "@/lib/brand";
-import { SERVICES } from "@/data/services";
+import { SERVICES, KATALOG } from "@/data/services";
 import { POSTS } from "@/data/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -49,5 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  return [...staticPages, ...blogPages, ...servicePages];
+  const catalogPages: MetadataRoute.Sitemap = KATALOG.map((k) => ({
+    url: `${BRAND.siteUrl}/layanan/${k.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...blogPages, ...servicePages, ...catalogPages];
 }

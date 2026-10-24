@@ -2,6 +2,26 @@
 
 Semua perubahan penting dicatat di sini (format: Keep a Changelog, SemVer).
 
+## [3.2.0] — 2026-10-24 — Full Catalog Integration
+
+### Added
+- **Integrasi penuh katalog PusatPerizinan (500 layanan)**: seluruh layanan dari gunaracorp/pusatperizinan (`layanan-500.json`) kini hidup di GConsultant sebagai halaman detail `/layanan/[slug]` — total 546 layanan aktif (46 unggulan + 500 katalog), sitemap 66 → 566 URL.
+- **Harga transparan & diskon aktif**: setiap halaman katalog menampilkan harga resmi Rupiah, harga normal tercoret, badge diskon persen, dan estimasi hemat — aset diferensiasi yang selama ini hanya ada di pusatperizinan.com.
+- **Taksonomi 4 kategori + 38 sub-kategori bilingual** (`katalog-meta.ts`): lingkup layanan, alur pengurusan, dokumen yang disiapkan, dan FAQ keluarga layanan — konsisten untuk seluruh anggota sub.
+- **Seksi "Katalog Lengkap"** di hub `/layanan`: pencarian instan 546 layanan (nama/kode/slug), filter 4 kategori + chip sub-kategori, paginasi adaptif 24/halaman, kartu harga berdiskon.
+- **Indeks klien ringan** (`katalog-lite.ts`): pencarian 500 item tanpa memuat deskripsi — bundle browser tetap ramping.
+- **JSON-LD lengkap** untuk halaman katalog: Service + Offer (harga IDR diskon), BreadcrumbList, FAQPage, HowTo.
+- **/api/status** kini melaporkan `catalogServices` (500) dan `servicesTotal` (546).
+
+### Changed
+- Metadata hub `/layanan`: "46 Jenis" → "546 Layanan"; klaim hero "500+ perizinan" kini terbukti oleh katalog nyata.
+- Sitemap menambah 500 URL katalog (prioritas 0.8).
+
+### Verified (Bukti)
+- `validateAllSlugs()`: 0 error — 546 slug unik tanpa bentrokan lintas tier, 38 sub-meta & 4 kategori lengkap.
+- Lint 0 error; 62 halaman katalog acak + sampel keempat kategori (BU/KP/LH/SK) semua HTTP 200; sitemap 566 URL.
+- Agent-browser E2E: kartu harga/diskon/hemat ter-render; pencarian "halal" → 15 hasil; switch EN mengubah label keluarga layanan; mobile 375px tanpa scroll horizontal; dev.log tanpa error.
+
 ## [3.1.1] — 2026-10-24 — Preview Iframe Hardening
 
 ### Fixed
