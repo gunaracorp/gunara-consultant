@@ -37,3 +37,18 @@ Stage Summary:
 - Rilis v3.1.1 "Preview Iframe Hardening": akar masalah "refused to connect" (XFO SAMEORIGIN) diberantas dengan CSP frame-ancestors * + saklar FRAME_POLICY untuk produksi.
 - Status server: dev server OFFLINE menunggu restart sandbox (satu-satunya jalur pemulihan); setelah restart, preview akan menyala dengan header baru.
 - Catatan deploy produksi: set FRAME_POLICY=sameorigin di environment produksi agar proteksi klikjacking aktif kembali.
+
+---
+Task ID: 25-b (server-revival — lanjutan preview fix)
+Agent: Z.ai — Master Polymath Council Mode
+Task: Pengguna masih melihat "logo Z saja" di preview → diagnosis & kebangkitan dev server tanpa reboot sandbox.
+
+Work Log:
+- DIAGNOSA: uptime sandbox 57 menit (belum pernah reboot; instruksi restart pengguna sebelumnya tidak memicu reboot). Port 3000 kosong. Curl URL preview eksternal → 502 + HTML placeholder berlogo Z → terbukti preview-chat-<chat_id>.space-z.ai mem-proses langsung ke :3000 sandbox ini.
+- BREAKTHROUGH MEKANISME REAPER (koreksi entri 25): proses anak LANGSUNG dari shell tool call disapu saat call berakhir (setsid/nohup pun kena karena ppid belum berpindah). Pola resmi init-fullstack.sh — `( nohup bash .zscripts/dev.sh >>log 2>&1 </dev/null & )` — subshell pembungkus keluar seketika → proses jadi orphan & ter-reparent jauh sebelum akhir call → LOLOS sapuan. Tiga kegagalan sebelumnya (bun langsung, setsid, babysitter pola lama) selaras dengan teori ini.
+- EKSEKUSI: dev.sh diluncurkan dengan pola resmi → server hidup, TERBUKTI BERTAHAN lintas 3+ tool call. Babysitter scripts/dev-babysitter.sh diluncurkan ulang dengan pola orphan sebagai jaring pengaman auto-restart (cek port dulu, aman dari double-start).
+- VERIFIKASI LIVE: header eksternal preview = HTTP 200 + `Content-Security-Policy: frame-ancestors *` + X-Frame-Options HILANG (fix v3.1.1 aktif ujung-ke-ujung). Halaman kunci 200: / /layanan /asesmen /metodologi /blog /faq /tentang-kami /pendiri /kontak /api/status; sitemap 66 URL. (Catatan: /assessment & /tentang 404 adalah path tebakan yang salah — path benar /asesmen & /tentang-kami.)
+
+Stage Summary:
+- Server GConsultant v3.1.1 HIDUP dan preview eksternal terverifikasi 200 + header anti-blokir iframe aktif — pengguna cukup REFRESH preview, tanpa restart.
+- Pengetahuan infrastruktur terkunci untuk agen berikutnya: selalu luncurkan proses jangka-panjang dengan pola subshell-orphan `( nohup CMD >>log 2>&1 </dev/null & )`, JANGAN sebagai anak langsung shell tool call.
