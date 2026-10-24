@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# GConsultant — Pusat Perizinan Terlengkap di Asia
+# 46 halaman layanan terindeks penuh via sitemap
+
+Sitemap: https://gunara.web.id/sitemap.xml
+Host: gunara.web.id
