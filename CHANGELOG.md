@@ -2,6 +2,18 @@
 
 Semua perubahan penting dicatat di sini (format: Keep a Changelog, SemVer).
 
+## [3.1.1] — 2026-10-24 — Preview Iframe Hardening
+
+### Fixed
+- **Preview sandbox "refused to connect" diberantas**: `X-Frame-Options: SAMEORIGIN` pada semua respons memblokir penyematan situs oleh UI chat via `<iframe>` lintas-origin — browser menampilkan error "refused to connect" padahal server merespons 200. Diganti kebijakan frame berlapis: header `Content-Security-Policy: frame-ancestors *` dikirim, `X-Frame-Options` tidak lagi dikirim pada mode preview.
+- **Saklar produksi**: set env `FRAME_POLICY=sameorigin` saat deploy produksi sungguhan → CSP `frame-ancestors 'self'` + `X-Frame-Options: SAMEORIGIN` dikirim kembali (proteksi klikjacking terkunci), tanpa menyentuh kode.
+
+### Changed
+- Versi 3.1.0 → 3.1.1 (SemVer patch: perubahan header keamanan, tanpa perubahan UI/route).
+
+### Verified (Bukti)
+- `next.config.ts` dimuat ulang tanpa error sintaks (import uji via bun); kebijakan frame terverifikasi pada level konfigurasi; header lain (nosniff, Referrer-Policy, Permissions-Policy, HSTS) tidak berubah.
+
 ## [3.1.0] — 2026-10-24 — Lead UX Hardening
 
 ### Fixed

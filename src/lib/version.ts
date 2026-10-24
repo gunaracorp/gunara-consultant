@@ -7,6 +7,6 @@
  *   4. worklog.md
  * Badge footer & endpoint /api/status mengikuti file ini secara otomatis.
  */
-export const VERSI = "3.1.0";
-export const NAMA_RILIS = "GCONSULTANT REBRAND — Polymathic Edition (Lead UX Hardening)";
+export const VERSI = "3.1.1";
+export const NAMA_RILIS = "GCONSULTANT REBRAND — Polymathic Edition (Preview Iframe Hardening)";
 export const TANGGAL_RILIS = "2026-10-24";

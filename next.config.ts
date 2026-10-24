@@ -5,9 +5,24 @@ import type { NextConfig } from "next";
  * Proporsional: situs publik tanpa auth — fokus klikjacking, MIME sniffing,
  * referrer leakage, dan permission sniffing. Tanpa CSP ketat agar i18n inline
  * & JSON-LD tetap hidup; CSP longgar disiapkan untuk tahap berikutnya.
+ *
+ * Kebijakan frame:
+ * - Sandbox preview z.ai menyematkan situs via <iframe> lintas-origin.
+ *   `X-Frame-Options: SAMEORIGIN` memicu error "refused to connect" di browser.
+ * - Default: CSP `frame-ancestors *` (iframe preview hidup; XFO tidak dikirim).
+ * - Produksi sungguhan: set env FRAME_POLICY=sameorigin → CSP 'self' +
+ *   X-Frame-Options SAMEORIGIN dikirim lagi (klikjacking terkunci).
  */
+const sameOriginFrame = process.env.FRAME_POLICY === "sameorigin";
+
 const securityHeaders = [
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  {
+    key: "Content-Security-Policy",
+    value: sameOriginFrame ? "frame-ancestors 'self'" : "frame-ancestors *",
+  },
+  ...(sameOriginFrame
+    ? [{ key: "X-Frame-Options", value: "SAMEORIGIN" }]
+    : []),
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-DNS-Prefetch-Control", value: "on" },

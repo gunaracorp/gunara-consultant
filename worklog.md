@@ -21,3 +21,19 @@ Stage Summary:
 - Rilis v3.1.0 "Lead UX Hardening": instalasi lengkap + satu-satunya defect nyata (form kontak silent-fail) diberantas dengan validasi custom aksesibel; funnel WhatsApp terbukti ujung-ke-ujung dengan bukti tangkapan layar halaman WhatsApp resmi.
 - Kesehatan akhir: 66 URL 200, lint bersih, security 6/6, asesmen/kontak/menu-mobile/EN-switch semua berfungsi, i18n tetap simetris.
 - Catatan deploy: set NEXT_PUBLIC_GA_ID + NEXT_PUBLIC_CLARITY_ID saat produksi; push ke GitHub bila kredensial tersedia.
+
+---
+Task ID: 25 (preview-fix-v3.1.1)
+Agent: Z.ai — Master Polymath Council Mode
+Task: Perbaiki error "preview-chat-...space-z.ai refused to connect" yang dialami pengguna saat membuka preview website GConsultant.
+
+Work Log:
+- DIAGNOSA: server dev bootstrap (port 3000) sehat & semua halaman 200; URL preview yang dipakai pengguna (preview-chat-<chat_id>.space-z.ai) terbukti MERESPONS 200 dari dalam sandbox → URL benar. Akar masalah: header keamanan `X-Frame-Options: SAMEORIGIN` (next.config.ts, semua path) memblokir <iframe> lintas-origin dari UI chat → pesan browser persis "refused to connect" (ERR_BLOCKED_BY_RESPONSE).
+- FIX (v3.1.1): kebijakan frame next.config.ts dibuat berlapis & adaptif — mode preview (default): kirim `Content-Security-Policy: frame-ancestors *`, XFO tidak dikirim; mode produksi: env FRAME_POLICY=sameorigin → CSP 'self' + X-Frame-Options SAMEORIGIN kembali aktif (klikjacking terkunci). Header lain (nosniff, Referrer-Policy, Permissions-Policy, HSTS, DNS-Prefetch) tidak berubah.
+- VERIFIKASI: next.config.ts dimuat via bun import → OK; lint 0 error; versi disinkronkan 4 titik (package.json, src/lib/version.ts, CHANGELOG.md, worklog.md) 3.1.0 → 3.1.1.
+- DISCOVERY INFRA (penting untuk agen berikutnya): proses yang diluncurkan dari tool call agen (termasuk setsid/nohup/babysitter) SELALU dimatikan di batas antar tool call — hanya dev server yang diluncurkan bootstrap platform (/start.sh → .zscripts/dev.sh saat boot) yang bertahan. Dev server sempat dimatikan saat diagnosa dan TIDAK BISA dihidupkan ulang dari dalam; butuh restart sandbox agar bootstrap menjalankannya lagi dengan fix v3.1.1. Artefak scripts/dev-babysitter.sh disimpan sebagai dokumentasi percobaan (tidak efektif di environment ini).
+
+Stage Summary:
+- Rilis v3.1.1 "Preview Iframe Hardening": akar masalah "refused to connect" (XFO SAMEORIGIN) diberantas dengan CSP frame-ancestors * + saklar FRAME_POLICY untuk produksi.
+- Status server: dev server OFFLINE menunggu restart sandbox (satu-satunya jalur pemulihan); setelah restart, preview akan menyala dengan header baru.
+- Catatan deploy produksi: set FRAME_POLICY=sameorigin di environment produksi agar proteksi klikjacking aktif kembali.
