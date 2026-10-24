@@ -2,6 +2,26 @@
 
 Semua perubahan penting dicatat di sini (format: Keep a Changelog, SemVer).
 
+## [3.3.0] — 2026-10-24 — Google Search Optimization
+
+### Added
+- **robots.txt dinamis** (`src/app/robots.ts`): sumber kebenaran tunggal dari `BRAND.siteUrl` — referensi sitemap selalu sinkron dengan domain produksi; `public/robots.txt` statis yang outdated (berkomentar "46 halaman") dihapus. Aturan: `Allow: /`, `Disallow: /api/`, `Sitemap` + `Host` eksplisit.
+- **Slot verifikasi Google Search Console**: set env `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` pada deploy → meta `google-site-verification` otomatis muncul di `<head>` tanpa edit kode.
+- **Sitlinks Search Box hidup**: `WebSite` JSON-LD `SearchAction` kini mendarat ke `/layanan?q={search_term_string}`; komponen KatalogLengkap membaca parameter `q` (dan `cari`) saat mount, mengisi kotak pencarian instan 546 layanan, dan menggulir otomatis ke seksi katalog.
+- **Audit engine SEO** (`scripts/seo-audit.py` v2): memindai robots.txt, sitemap.xml (validasi domain + jumlah URL), dan 100 halaman sampel terhadap 11 kriteria Google (title/description length, canonical, og:url, og:image reachable, h1 unik, JSON-LD parseable, OG/Twitter lengkap, hreflang, noindex). Terisolasi environment — sitemap produksi diarahkan ke BASE sandbox.
+
+### Fixed
+- **Clamp metadata ke batas tampilan Google**: `clampTitle` (≤52c unik + " | GConsultant" = ≤65c) dan `clampDesc` (≤158c, potong batas kata + elipsis) diterapkan pada mesin `pageMetadata`, `generateMetadata` blog & layanan (featured + katalog) — 10 judul >70c dan 50+ deskripsi >165c tidak akan terpotong Google lagi.
+- **Judul hub dipendekkan**: Blog, Metodologi UMEA™, Asesmen UMI™ kini tampil utuh di SERP.
+- `SearchAction` sebelumnya menunjuk `/?q=` yang tidak pernah ditangani halaman mana pun (integritas schema rusak) — diperbaiki total.
+
+### Changed
+- Layout metadata: `applicationName` ditambahkan.
+
+### Verified (Bukti)
+- Audit v2: 100 halaman sampel (14 statis + 6 blog + 80 layanan/katalog + landing `?q=`) — canonical 100% benar, 0 noindex, 0 JSON-LD rusak, og:image 200 semua.
+- robots.txt dinamis dilayani Next.js; sitemap 566 URL semua domain `gunara.web.id`.
+
 ## [3.2.0] — 2026-10-24 — Full Catalog Integration
 
 ### Added

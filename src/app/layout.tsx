@@ -8,6 +8,7 @@ import { Analytics } from "@/components/analytics";
 import { BRAND } from "@/lib/brand";
 import { SERVICES } from "@/data/services";
 import { VERSI } from "@/lib/version";
+import { clampDesc } from "@/lib/seo";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,8 +29,9 @@ export const metadata: Metadata = {
     default: `${BRAND.name} — ${BRAND.tagline}`,
     template: `%s | ${BRAND.name}`,
   },
-  description:
-    "GConsultant — The Polymathic Problem Solver. Menyatukan ilmu, menata kompleksitas, mewujudkan solusi: 500+ perizinan & legalitas usaha, arsitektur sistem bisnis UMEA™, 38 provinsi Indonesia, ISO 9001:2015. Konsultasi gratis!",
+  description: clampDesc(
+    "GConsultant — The Polymathic Problem Solver. Menyatukan ilmu, menata kompleksitas, mewujudkan solusi: 500+ perizinan & legalitas usaha, arsitektur sistem bisnis UMEA™, 38 provinsi Indonesia, ISO 9001:2015. Konsultasi gratis!"
+  ),
   keywords: [
     "GConsultant",
     "polymathic problem solver",
@@ -56,6 +58,10 @@ export const metadata: Metadata = {
   authors: [{ name: BRAND.name, url: BRAND.siteUrl }],
   creator: BRAND.name,
   publisher: BRAND.name,
+  applicationName: BRAND.name,
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
   alternates: {
     canonical: "/",
     languages: {
@@ -70,8 +76,9 @@ export const metadata: Metadata = {
     url: BRAND.siteUrl,
     siteName: BRAND.name,
     title: `${BRAND.name} — ${BRAND.tagline}`,
-    description:
-      "Kompleksitas memiliki struktur. Solusi memiliki jalur. GConsultant menyatukan strategi, sistem bisnis, dan teknologi — 500+ perizinan, 38 provinsi, ISO 9001:2015.",
+    description: clampDesc(
+      "Kompleksitas memiliki struktur. Solusi memiliki jalur. GConsultant menyatukan strategi, sistem bisnis, dan teknologi — 500+ perizinan, 38 provinsi, ISO 9001:2015."
+    ),
     images: [
       {
         url: "/images/og-image.jpg",
@@ -84,8 +91,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `${BRAND.name} — ${BRAND.tagline}`,
-    description:
-      "Kompleksitas memiliki struktur. Solusi memiliki jalur. 500+ perizinan & arsitektur sistem bisnis, 38 provinsi Indonesia.",
+    description: clampDesc(
+      "Kompleksitas memiliki struktur. Solusi memiliki jalur. 500+ perizinan & arsitektur sistem bisnis, 38 provinsi Indonesia."
+    ),
     images: ["/images/og-image.jpg"],
   },
   robots: {
@@ -199,7 +207,7 @@ const websiteJsonLd = {
     "@type": "SearchAction",
     target: {
       "@type": "EntryPoint",
-      urlTemplate: `${BRAND.siteUrl}/?q={search_term_string}`,
+      urlTemplate: `${BRAND.siteUrl}/layanan?q={search_term_string}`,
     },
     "query-input": "required name=search_term_string",
   },

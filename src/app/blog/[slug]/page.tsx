@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/footer";
 import { BlogArticle } from "@/components/blog-article";
-import { pageMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import { pageMetadata, breadcrumbJsonLd, clampTitle, clampDesc } from "@/lib/seo";
 import { BRAND } from "@/lib/brand";
 import { POSTS, getPost } from "@/data/blog";
 
@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost(slug);
   if (!post) return {};
 
-  const title = post.titleId;
-  const description = post.excerptId;
+  const title = clampTitle(post.titleId);
+  const description = clampDesc(post.excerptId);
   const ogAlt = `${post.titleId} — ${BRAND.taglineId}`;
 
   return {

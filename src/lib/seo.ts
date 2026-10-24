@@ -2,6 +2,30 @@ import type { Metadata } from "next";
 import { BRAND } from "@/lib/brand";
 
 /**
+ * Clamp deskripsi ke batas tampilan Google (±155–160 karakter).
+ * Potong pada batas kata agar tidak memenggal kata — tambah elipsis.
+ */
+export function clampDesc(text: string, max = 158): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${cut.slice(0, lastSpace > 80 ? lastSpace : max)}…`;
+}
+
+/**
+ * Clamp judul halaman — template layout menambahkan " | GConsultant" (13c).
+ * Batasi bagian unik ≤ 52 karakter agar SERP tidak terpotong (target ≤ 65).
+ */
+export function clampTitle(text: string, max = 52): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${cut.slice(0, lastSpace > 30 ? lastSpace : max)}…`;
+}
+
+/**
  * Mesin metadata "terlengkap" untuk semua halaman mandiri GConsultant.
  * Satu panggilan = title, description, keywords, canonical, hreflang,
  * OpenGraph penuh, Twitter Card penuh, dan aturan robots googleBot.
@@ -17,10 +41,11 @@ export function pageMetadata(opts: {
   const fullTitle = `${opts.title} | ${BRAND.name}`;
   const url = `${BRAND.siteUrl}${opts.path}`;
   const ogAlt = `${opts.title} — ${BRAND.taglineId}`;
+  const desc = clampDesc(opts.description);
 
   return {
     title: opts.title,
-    description: opts.description,
+    description: desc,
     keywords: [...opts.keywords, "gunara consultant", "pusat perizinan terlengkap"],
     alternates: {
       canonical: opts.path,
@@ -36,7 +61,7 @@ export function pageMetadata(opts: {
       url,
       siteName: BRAND.name,
       title: fullTitle,
-      description: opts.description,
+      description: desc,
       images: [
         {
           url: "/images/og-image.jpg",
@@ -49,7 +74,7 @@ export function pageMetadata(opts: {
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
-      description: opts.description,
+      description: desc,
       images: ["/images/og-image.jpg"],
     },
     robots: {

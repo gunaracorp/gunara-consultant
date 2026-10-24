@@ -6,6 +6,7 @@ import { CtaBanner } from "@/components/sections/cta-banner";
 import { ServiceDetail, RelatedServices } from "@/components/service-detail";
 import { CatalogDetail } from "@/components/catalog-detail";
 import { BRAND } from "@/lib/brand";
+import { clampTitle, clampDesc } from "@/lib/seo";
 import {
   CATEGORIES,
   SERVICES,
@@ -35,9 +36,11 @@ export function generateStaticParams() {
 function catalogMetadata(item: CatalogItem): Metadata {
   const sub = getCatalogSub(item.subCode);
   const title = `${item.nama} — Harga ${formatRp(item.hargaDiskon)}, Proses Resmi & Bergaransi`;
-  const description = `${item.descId.slice(0, 155)}... Kode ${item.kode}. Dikelola GConsultant — tersertifikasi ISO 9001:2015, melayani 38 provinsi Indonesia.`;
+  const description = clampDesc(
+    `${item.descId} Kode ${item.kode}. Dikelola GConsultant — tersertifikasi ISO 9001:2015, melayani 38 provinsi Indonesia.`
+  );
   return {
-    title: item.nama,
+    title: clampTitle(item.nama),
     description,
     keywords: [
       item.nama,
@@ -88,10 +91,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const service = resolved.service;
   const title = `${service.nameId} — Jasa Pengurusan Resmi, Cepat & Bergaransi`;
-  const description = `${service.shortId} Dikelola GConsultant — pusat perizinan terlengkap di Asia, tersertifikasi ISO 9001:2015, melayani 38 provinsi Indonesia. Estimasi ${service.durationId}, biaya mulai ${service.priceFrom}.`;
+  const description = clampDesc(
+    `${service.shortId} Dikelola GConsultant — pusat perizinan terlengkap di Asia, tersertifikasi ISO 9001:2015, melayani 38 provinsi Indonesia. Estimasi ${service.durationId}, biaya mulai ${service.priceFrom}.`
+  );
 
   return {
-    title: service.nameId,
+    title: clampTitle(service.nameId),
     description,
     keywords: [
       ...service.keywords,

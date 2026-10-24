@@ -6,7 +6,7 @@ import { UmeaAssessment } from "@/components/sections/umea-assessment";
 import { pageMetadata, breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Asesmen UMEA Maturity Index™ — Ukur Kematangan Usaha Gratis",
+  title: "Asesmen UMI™ — Ukur Kematangan Usaha Gratis",
   description:
     "Asesmen mandiri gratis 12 pertanyaan (2 menit): dapatkan skor UMEA Maturity Index™ 0-100, tingkat UMEA Anda (UMEA-03 s.d. UMEA-21), 3 titik terlemah, dan rekomendasi paket dokumen D-10 s.d. D-165. Berjalan penuh di perangkat Anda — privat dan instan.",
   keywords: [

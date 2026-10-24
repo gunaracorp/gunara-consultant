@@ -72,3 +72,23 @@ Work Log:
 Stage Summary:
 - Rilis v3.2.0 "Full Catalog Integration": GConsultant kini 546 layanan (klaim "500+" hero menjadi fakta), harga PusatPerizinan transparan di seluruh halaman katalog, sitemap 566 URL, taksonomi bilingual 4/38.
 - Server tetap hidup (pola orphan 25-b); file sementara /tmp/pusatperizinan disimpan untuk referensi (hapus aman).
+
+---
+Task ID: 27 (seo-optimization-v3.3.0)
+Agent: Z.ai — Omnibrand Council (46 perspektif: SEO/Content/Crawl/Schema/Brand)
+Task: Pastikan SETIAP halaman memakai Google Search Engine Optimization — satukan seluruh situs dengan standar Google Search (permintaan pengguna).
+
+Work Log:
+- AUDIT AWAL (scripts/seo-audit.py v1): menemukan 2 temuan lingkungan penting — (1) audit v1 tercemar karena URL sitemap absolut difetch ke server PRODUKSI gunara.web.id (yang ternyata masih menjalankan kode lama dengan canonical ke domain mati gunaraconsultant.com) — halaman sandbox sendiri ternyata benar; (2) slug tebakan 404 memancarkan canonical beranda (perilaku wajib 404, diabaikan Google). Pelajaran: audit harus isolasi environment.
+- FIX-1 SearchAction: WebSite JSON-LD semula menunjuk /?q= yang tak pernah ditangani (integritas schema rusak) → target kini /layanan?q={search_term_string}; KatalogLengkap membaca param q/cari via useEffect + requestAnimationFrame (hindari lint react-hooks/set-state-in-effect & hydration mismatch), isi kotak search instan 546 layanan + scrollIntoView #katalog.
+- FIX-2 robots.ts: route dinamis src/app/robots.ts menggantikan public/robots.txt statis yang outdated (komentar "46 halaman" saat kini 566 URL) — sumber kebenaran tunggal BRAND.siteUrl (Sitemap + Host otomatis sinkron).
+- FIX-3 Search Console: slot metadata.verification.google via env NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION — tanpa edit kode saat deploy.
+- FIX-4 Clamp metadata: clampTitle (≤52c + template 14c = ≤65 SERP) & clampDesc (≤158c, batas kata + elipsis) di seo.ts; diterapkan pada pageMetadata, generateMetadata blog & layanan (featured + katalog), layout (description + OG + Twitter beranda); 3 judul hub dipendekkan (Blog 67c, Metodologi 53c, Asesmen 58c).
+- BUGFIX jalur: edit import blog/[slug] sempat menghapus breadcrumbJsonLd → 6 halaman blog 500; dikembalikan, 200 lagi. Audit v2: decode entitas HTML sebelum ukur panjang (&amp; menggelembungkan hitungan), perbandingan canonical/og:url rstrip("/") untuk root, URL sitemap diarahkan ke BASE.
+- VER-1: versi 3.2.0 → 3.3.0 (package.json, version.ts, CHANGELOG.md entri "Google Search Optimization", worklog ini).
+
+Stage Summary:
+- Rilis v3.3.0 "Google Search Optimization": audit FINAL 101/101 halaman PERFECT, 0 issues — canonical 100% benar, title ≤67c, description ≤158c, h1 unik, JSON-LD parseable (6–8 blok/halaman), OG+Twitter+hreflang lengkap, 0 noindex, robots.txt dinamis + sitemap 566 URL valid.
+- E2E sitelinks: /layanan?q=halal → kotak search terisi "halal", 15 hasil, auto-scroll ke katalog (headless browser).
+- Lint 0 error; preview eksternal 200 (homepage/robots/sitemap).
+- ⚠️ AKSI DEPLOY PENTING: server produksi gunara.web.id masih menjalankan KODE LAMA (canonical → gunaraconsultant.com yang tidak resolve DNS = risiko mass-deindexing 546 halaman). SEGERA redeploy versi 3.3.0 ke produksi + set FRAME_POLICY=sameorigin + (opsional) NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION, lalu submit sitemap.xml di Google Search Console.

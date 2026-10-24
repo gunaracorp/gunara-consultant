@@ -7,7 +7,7 @@ import { pageMetadata, breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Metodologi UMEA™ — Hukum Minimum Usaha & Master Matrix",
+  title: "Metodologi UMEA™ — Hukum Minimum Usaha",
   description:
     "UMEA™ (Universal Minimum Enterprise Architecture) — metodologi milik GConsultant: 6 tingkat organisasi (UMEA-03 s.d. UMEA-21), 21 fungsi kritis, 5 tingkat dokumen (D-10 s.d. D-165), dan UMEA Maturity Index™ 0-100. Hukum Minimum Usaha™ yang melampaui standar konsultasi biasa.",
   keywords: [

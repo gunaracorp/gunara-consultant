@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BadgePercent, Search, SearchX } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,21 @@ export function KatalogLengkap() {
   const [cat, setCat] = useState<string>("all");
   const [sub, setSub] = useState<string>("all");
   const [shown, setShown] = useState(PAGE);
+
+  // SEO (v3.3.0): SearchAction sitelinks Google mendarat di /layanan?q=... —
+  // baca parameter, isi kotak pencarian, dan gulir langsung ke katalog.
+  // setState dijalankan dalam rAF agar sinkron-hidrasi tetap aman.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const p = new URLSearchParams(window.location.search);
+    const initial = (p.get("q") ?? p.get("cari") ?? "").trim();
+    if (initial) {
+      requestAnimationFrame(() => {
+        setQ(initial);
+        document.getElementById("katalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, []);
 
   const subs = useMemo(
     () =>
